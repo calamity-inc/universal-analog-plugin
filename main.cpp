@@ -40,9 +40,9 @@ struct DeviceInfo
 
 // Boilerplate
 
-SOUP_CEXPORT const uint32_t ANALOG_SDK_PLUGIN_ABI_VERSION = 0;
+SOUP_CEXPORT const uint32_t ANALOG_SDK_PLUGIN_ABI_VERSION = 1;
 
-SOUP_CEXPORT const char* _name()
+SOUP_CEXPORT const char* name()
 {
 	return "Universal Analog Plugin";
 }
@@ -56,7 +56,7 @@ SOUP_CEXPORT bool is_initialised()
 
 static DeviceInfo dev_info{ 0xFFFF, 0xFFFF, "Unknown", "Soup-compatible Analog Keyboard", 0, DeviceType::Keyboard };
 
-SOUP_CEXPORT int _device_info(DeviceInfo* buffer[], uint32_t len)
+SOUP_CEXPORT int device_info(DeviceInfo* buffer[], uint32_t len)
 {
 	buffer[0] = &dev_info;
 	return 1;
@@ -89,7 +89,7 @@ static float active_analogues[REPORT_RELEASED_KEYS ? 32 : 16];
 	return soup::soup_key_to_hid_scancode(key);
 }
 
-SOUP_CEXPORT int _initialise(void* data, void(*callback)(void* data, DeviceEventType eventType, DeviceInfo* deviceInfo))
+SOUP_CEXPORT int initialise(void* data, void(*callback)(void* data, DeviceEventType eventType, DeviceInfo* deviceInfo))
 {
 	poll_thread.start([]
 	{
@@ -136,7 +136,7 @@ SOUP_CEXPORT float read_analog(uint16_t code)
 	return 0.0f;
 }
 
-SOUP_CEXPORT int _read_full_buffer(uint16_t* code_buffer, float* analog_buffer, uint32_t len, DeviceID device)
+SOUP_CEXPORT int read_full_buffer(uint16_t* code_buffer, float* analog_buffer, uint32_t len, DeviceID device)
 {
 #if REPORT_RELEASED_KEYS
 	if (!pending_release.empty())
